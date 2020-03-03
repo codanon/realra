@@ -1,0 +1,21 @@
+name: macos
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        ruby: [ 2.6, 2.5, 2.4 ]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: Install dependencies
+      run: gem install minitest
+    - name: Run test
+      env:
+        COVERALLS: "yes"
+      run: ruby -Ilib exe/rake
